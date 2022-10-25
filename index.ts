@@ -1,54 +1,92 @@
 import express from "express";
-import bodyParser from "body-parser";
 import cors from "cors";
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
 
-let product: { id: number; name: string; marca: string }[] = [
+app.use(cors());
+app.use(express.json());
+
+const products: { id: number; name: string; marca: string }[] = [
   {
-    name: "mause",
-    marca: "telefe",
+    name: "Teclado",
+    marca: "Logitech",
     id: 2131231,
+  },
+  {
+    name: "Placa",
+    marca: "AMD",
+    id: 21312312,
+  },
+  {
+    name: "Placa",
+    marca: "AMD",
+    id: 21312312,
   },
 ];
 
+/**
+ * Get all products
+ */
 app.get("/product", (req, res) => {
-  res.status(200).json(product);
+  return res.status(200).json(products);
 });
 
+/**
+ * Get a single Product by id
+ */
+app.get("/product/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const index = products.findIndex((product) => product.id === id);
+
+  if (index === -1)
+    return res.status(400).json({ message: "product could not be found" });
+  return res.status(200).json(products[index]);
+});
+
+/**
+ * Create product
+ */
 app.post("/product", (req, res) => {
   const { name, marca } = req.body;
-  try {
-    if (!name || !marca) throw new Error("che pasame el name y marca");
-    product.push({ id: new Date().getTime(), name, marca });
-    res.status(200).json(...product.slice(-1));
-  } catch (err) {
-    return res.status(400).json({ message: err.message });
-  }
+  if (!name || !marca)
+    return res
+      .status(400)
+      .json({ message: "fields 'name' and 'marca' is requiered" });
+  products.push({ id: new Date().getTime(), name, marca });
+  return res.status(200).json(...products.slice(-1));
 });
 
-app.put("/product", (req, res) => {
-  const { name, id } = req.body;
-
-  const index = product.findIndex((product) => product.id === id);
-  console.log(index);
+/**
+ * Edit product by id
+ */
+app.put("/product/:id", (req, res) => {
+  const { name, marca } = req.body;
+  const id = Number(req.params.id);
+  const index = products.findIndex((product) => product.id === id);
 
   if (index === -1)
     return res.status(400).json({ message: "no se encontro producto" });
-
-  product[index] = { ...product[index], name };
-  res.status(200).json(product[index]);
+  if (marca) {
+    products[index].marca = marca;
+  }
+  if (name) {
+    products[index].name = name;
+  }
+  return res.status(200).json(products[index]);
 });
 
-app.delete("/products", (req, res) => {
-  const { id } = req.body;
-  product = product.filter((item) => {
-    return item.id != id;
-  });
-  res.status(200).json({ product, message: "elemento eliminado" });
+/**
+ * Delete product by id
+ */
+app.delete("/product/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const index = products.findIndex((product) => product.id === id);
+
+  if (index === -1)
+    return res.status(400).json({ message: "product could not be found" });
+
+  return res.status(200).json(products.splice(index, 1));
 });
 
 app.listen(3000, () => {
-  return console.log(`Server running on 3000`);
+  console.log("Corriendo");
 });
