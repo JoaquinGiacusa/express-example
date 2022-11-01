@@ -89,7 +89,7 @@ app.listen(3000, () => {
 /**
  * Search Products by query
  */
-app.get("/", (req, res) => {
+app.get("/product", (req, res) => {
   const { search } = req.query;
 
   const filtered = products.filter((p) => {
