@@ -89,8 +89,9 @@ app.listen(3000, () => {
 /**
  * Search Products by query
  */
-app.get("/product", (req, res) => {
+app.get("/", (req, res) => {
   const { search } = req.query;
+  console.log(search);
 
   const filtered = products.filter((p) => {
     if (
@@ -99,11 +100,12 @@ app.get("/product", (req, res) => {
     )
       return p;
   });
+  console.log(filtered);
 
   if (filtered.length > 0)
     return res.status(200).json({ serachResult: filtered });
-
-  return res
-    .status(400)
-    .json({ message: "No hubo coincidencias con la busqueda" });
+  else
+    return res
+      .status(400)
+      .json({ message: "No hubo coincidencias con la busqueda" });
 });
