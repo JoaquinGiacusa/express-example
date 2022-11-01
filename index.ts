@@ -89,14 +89,13 @@ app.listen(3000, () => {
 /**
  * Search Products by query
  */
-app.get("/", (req, res) => {
-  const { search } = req.query;
-  console.log(search);
+app.get("/search", (req, res) => {
+  const { q } = req.query;
 
   const filtered = products.filter((p) => {
     if (
-      p.name.toLocaleLowerCase().includes(search as string) ||
-      p.marca.toLocaleLowerCase().includes(search as string)
+      p.name.toLocaleLowerCase().includes(q as string) ||
+      p.marca.toLocaleLowerCase().includes(q as string)
     )
       return p;
   });
