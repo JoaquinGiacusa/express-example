@@ -16,11 +16,6 @@ const products: { id: number; name: string; marca: string }[] = [
     marca: "AMD",
     id: 21312312,
   },
-  {
-    name: "Placa",
-    marca: "AMD",
-    id: 21312312,
-  },
 ];
 
 /**
@@ -89,4 +84,26 @@ app.delete("/product/:id", (req, res) => {
 
 app.listen(3000, () => {
   console.log("Corriendo");
+});
+
+/**
+ * Search Products by query
+ */
+app.get("/", (req, res) => {
+  const { search } = req.query;
+
+  const filtered = products.filter((p) => {
+    if (
+      p.name.toLocaleLowerCase().includes(search as string) ||
+      p.marca.toLocaleLowerCase().includes(search as string)
+    )
+      return p;
+  });
+
+  if (filtered.length > 0)
+    return res.status(200).json({ serachResult: filtered });
+
+  return res
+    .status(400)
+    .json({ message: "No hubo coincidencias con la busqueda" });
 });
