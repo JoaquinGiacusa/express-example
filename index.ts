@@ -16,42 +16,6 @@ const products: { id: number; name: string; marca: string }[] = [
     marca: "AMD",
     id: 42345612,
   },
-  {
-    name: "Teclado",
-    marca: "HyperX",
-    id: 5654311,
-  },
-  {
-    name: "Teclado",
-    marca: "Corsair",
-    id: 123123482,
-  },
-  {
-    name: "Teclado",
-    marca: "Genius",
-    id: 6431235623,
-  },
-  {
-    name: "Teclado",
-    marca: "Samsung",
-    id: 123124512,
-  },
-  ,
-  {
-    name: "Teclado",
-    marca: "Corsair",
-    id: 23123415,
-  },
-  {
-    name: "Teclado",
-    marca: "Genius",
-    id: 5435345,
-  },
-  {
-    name: "Teclado",
-    marca: "Samsung",
-    id: 123123123,
-  },
 ];
 
 /**
