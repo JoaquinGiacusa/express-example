@@ -9,12 +9,48 @@ const products: { id: number; name: string; marca: string }[] = [
   {
     name: "Teclado",
     marca: "Logitech",
-    id: 2131231,
+    id: 12356234,
   },
   {
     name: "Placa",
     marca: "AMD",
-    id: 21312312,
+    id: 42345612,
+  },
+  {
+    name: "Teclado",
+    marca: "HyperX",
+    id: 5654311,
+  },
+  {
+    name: "Teclado",
+    marca: "Corsair",
+    id: 123123482,
+  },
+  {
+    name: "Teclado",
+    marca: "Genius",
+    id: 6431235623,
+  },
+  {
+    name: "Teclado",
+    marca: "Samsung",
+    id: 123124512,
+  },
+  ,
+  {
+    name: "Teclado",
+    marca: "Corsair",
+    id: 23123415,
+  },
+  {
+    name: "Teclado",
+    marca: "Genius",
+    id: 5435345,
+  },
+  {
+    name: "Teclado",
+    marca: "Samsung",
+    id: 123123123,
   },
 ];
 
@@ -86,24 +122,54 @@ app.listen(3000, () => {
   console.log("Corriendo");
 });
 
+const getOffsetAndLimitFromReq = (
+  limit,
+  offset,
+  maxLimit = 10,
+  maxOffset = 100
+) => {
+  // const queryLimit = Number(limit);
+  // const queryOffset = Number(offset) || 0;
+
+  const finalLimit = limit ? (limit < maxLimit ? limit : maxLimit) : maxLimit;
+
+  const finalOffset = offset < maxOffset ? offset : 0;
+
+  return { finalLimit, finalOffset };
+};
+
 /**
  * Search Products by query
  */
 app.get("/search", (req, res) => {
-  const { q } = req.query;
+  const { q, limit, offset } = req.query;
+  const queryLimit = Number(limit);
+  const queryOffset = Number(offset);
 
-  const filtered = products.filter((p) => {
+  const { finalLimit, finalOffset } = getOffsetAndLimitFromReq(
+    queryLimit,
+    queryOffset
+  );
+
+  const search = products.filter((p) => {
     if (
       p.name.toLocaleLowerCase().includes(q as string) ||
       p.marca.toLocaleLowerCase().includes(q as string)
     )
       return p;
   });
-  console.log(filtered);
 
-  if (filtered.length > 0)
-    return res.status(200).json({ serachResult: filtered });
-  else
+  if (search.length > 0) {
+    if (search.length > finalOffset) {
+      const filtered = search
+        .slice(finalOffset, search.length)
+        .slice(0, finalLimit);
+
+      return res.status(200).json({ serachResult: filtered });
+    } else {
+      return res.status(200).json({ serachResult: search });
+    }
+  } else
     return res
       .status(400)
       .json({ message: "No hubo coincidencias con la busqueda" });
